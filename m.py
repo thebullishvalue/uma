@@ -932,7 +932,7 @@ def create_ranking_chart(results_df, top_n=10):
 def render_header():
     st.markdown("""
     <div class="premium-header">
-        <h1>UMA PRO : Unified Market Analysis</h1>
+        <h1>UMA : Unified Market Analysis</h1>
         <div class="tagline">Quantitative Signal Intelligence System</div>
     </div>
     """, unsafe_allow_html=True)

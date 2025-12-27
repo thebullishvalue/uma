@@ -1,10 +1,8 @@
 streamlit
 pandas
+pandas-datareader
+yfinance
 numpy
 plotly
-scipy
-scikit-learn
-yfinance
-lxml
-investpy
-pandas_datareader
+requests
+nsepython

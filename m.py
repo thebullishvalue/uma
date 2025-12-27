@@ -63,8 +63,56 @@ st.markdown("""
     * { font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; }
     .main, [data-testid="stSidebar"] { background-color: var(--background-color); color: var(--text-primary); }
     .stApp > header { background-color: transparent; }
-    #MainMenu {visibility: hidden;} footer {visibility: hidden;} header {visibility: hidden;}
+    #MainMenu {visibility: hidden;} footer {visibility: hidden;}
     .block-container { padding-top: 1rem; max-width: 1400px; }
+    
+    /* Sidebar toggle button - always visible */
+    [data-testid="collapsedControl"] {
+        display: flex !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+        background-color: var(--secondary-background-color) !important;
+        border: 2px solid var(--primary-color) !important;
+        border-radius: 8px !important;
+        padding: 10px !important;
+        margin: 12px !important;
+        box-shadow: 0 0 15px rgba(var(--primary-rgb), 0.4) !important;
+        z-index: 999999 !important;
+        position: fixed !important;
+        top: 14px !important;
+        left: 14px !important;
+        width: 40px !important;
+        height: 40px !important;
+        align-items: center !important;
+        justify-content: center !important;
+    }
+    
+    [data-testid="collapsedControl"]:hover {
+        background-color: rgba(var(--primary-rgb), 0.2) !important;
+        box-shadow: 0 0 20px rgba(var(--primary-rgb), 0.6) !important;
+        transform: scale(1.05);
+    }
+    
+    [data-testid="collapsedControl"] svg {
+        stroke: var(--primary-color) !important;
+        width: 20px !important;
+        height: 20px !important;
+    }
+    
+    /* Also style the sidebar close button */
+    [data-testid="stSidebar"] button[kind="header"] {
+        background-color: transparent !important;
+        border: none !important;
+    }
+    
+    [data-testid="stSidebar"] button[kind="header"] svg {
+        stroke: var(--primary-color) !important;
+    }
+    
+    /* Ensure sidebar button is always on top */
+    button[kind="header"] {
+        z-index: 999999 !important;
+    }
     
     .premium-header {
         background: var(--secondary-background-color);

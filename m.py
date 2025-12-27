@@ -516,7 +516,7 @@ def fetch_ticker_data(target_ticker, macro_df, days_back=100):
 def calculate_msf(df, length=20, roc_len=14, clip=3.0):
     close = df['Close']
     
-    roc_raw = close.pct_change(roc_len)
+    roc_raw = close.pct_change(roc_len, fill_method=None)
     roc_z = zscore_clipped(roc_raw, length, clip)
     momentum_norm = sigmoid(roc_z, 1.5)
     
@@ -561,7 +561,7 @@ def calculate_msf(df, length=20, roc_len=14, clip=3.0):
     accum_ratio = accum_ratio.fillna(0.5)
     accum_norm = 2.0 * (accum_ratio - 0.5)
     
-    pct_change = close.pct_change()
+    pct_change = close.pct_change(fill_method=None)
     threshold = 0.0033
     regime_signals = np.select([pct_change > threshold, pct_change < -threshold], [1, -1], default=0)
     regime_count = pd.Series(regime_signals, index=df.index).cumsum()

@@ -947,7 +947,7 @@ def render_sidebar():
         </div>
         """, unsafe_allow_html=True)
         st.markdown('<div class="section-divider"></div>', unsafe_allow_html=True)
-        mode = st.radio("Analysis Mode", ["📈 Chart Analysis", "🏦 ETF Screener", "📊 Market Screener"], label_visibility="collapsed")
+        mode = st.radio("Analysis Mode", ["🏠 Home", "🏦 ETF Screener", "📊 Market Screener", "📈 Chart Analysis"], label_visibility="collapsed")
         st.markdown('<div class="section-divider"></div>', unsafe_allow_html=True)
         
         # ETF Screener specific options (fixed ETF universe)
@@ -1070,23 +1070,204 @@ def render_sidebar():
         return mode, length, roc_len, regime_sensitivity, base_weight, spread_universe, spread_index, spread_date, spread_mode, spread_start_date, spread_end_date, etf_mode, etf_date, etf_start_date, etf_end_date
 
 
+def run_home_page():
+    """Landing page with overview and quick navigation"""
+    
+    # Welcome section
+    st.markdown("""
+    <div class='info-box' style='text-align: center; padding: 2rem;'>
+        <h2 style='color: var(--primary-color); margin-bottom: 0.5rem;'>Welcome to UMA PRO</h2>
+        <p style='color: var(--text-muted); font-size: 1rem;'>Unified Market Analysis - Quantitative Signal Intelligence System</p>
+    </div>
+    """, unsafe_allow_html=True)
+    
+    st.markdown("<br>", unsafe_allow_html=True)
+    
+    # Feature cards
+    col1, col2, col3 = st.columns(3)
+    
+    with col1:
+        st.markdown("""
+        <div class='metric-card primary' style='min-height: 280px;'>
+            <h3 style='color: var(--primary-color); margin-bottom: 1rem;'>🏦 ETF Screener</h3>
+            <p style='color: var(--text-muted); font-size: 0.9rem; line-height: 1.6;'>
+                Full MSF + MMR analysis across a curated universe of 30 ETFs covering major indices, sectors, and asset classes.
+            </p>
+            <br>
+            <p style='color: var(--text-secondary); font-size: 0.85rem;'>
+                <strong>Features:</strong><br>
+                • Single Day Analysis<br>
+                • Time Series Tracking<br>
+                • Macro Correlation (MMR)<br>
+                • Signal Dashboard
+            </p>
+        </div>
+        """, unsafe_allow_html=True)
+    
+    with col2:
+        st.markdown("""
+        <div class='metric-card success' style='min-height: 280px;'>
+            <h3 style='color: var(--success-green); margin-bottom: 1rem;'>📊 Market Screener</h3>
+            <p style='color: var(--text-muted); font-size: 0.9rem; line-height: 1.6;'>
+                MSF-based signal analysis across F&O stocks or index constituents. Scan 200-500 stocks efficiently.
+            </p>
+            <br>
+            <p style='color: var(--text-secondary); font-size: 0.85rem;'>
+                <strong>Features:</strong><br>
+                • F&O Stocks Universe<br>
+                • 16 Index Constituents<br>
+                • Time Series Analysis<br>
+                • Regime Detection
+            </p>
+        </div>
+        """, unsafe_allow_html=True)
+    
+    with col3:
+        st.markdown("""
+        <div class='metric-card info' style='min-height: 280px;'>
+            <h3 style='color: var(--info-cyan); margin-bottom: 1rem;'>📈 Chart Analysis</h3>
+            <p style='color: var(--text-muted); font-size: 0.9rem; line-height: 1.6;'>
+                Deep dive into individual securities with full UMA analysis including price charts, oscillators, and macro drivers.
+            </p>
+            <br>
+            <p style='color: var(--text-secondary); font-size: 0.85rem;'>
+                <strong>Features:</strong><br>
+                • Any NSE Symbol<br>
+                • Price & Oscillator Charts<br>
+                • Signal Components<br>
+                • Macro Driver Analysis
+            </p>
+        </div>
+        """, unsafe_allow_html=True)
+    
+    st.markdown("<br>", unsafe_allow_html=True)
+    
+    # Analysis methodology section
+    st.markdown("### 📐 Analysis Methodology")
+    
+    col_m1, col_m2 = st.columns(2)
+    
+    with col_m1:
+        st.markdown("""
+        <div class='signal-card buy' style='padding: 1.5rem;'>
+            <h4 style='color: var(--success-green); margin-bottom: 1rem;'>MSF - Market Structure & Flow</h4>
+            <p style='color: var(--text-muted); font-size: 0.85rem; line-height: 1.7;'>
+                Internal price-based indicator combining:
+            </p>
+            <ul style='color: var(--text-secondary); font-size: 0.85rem; line-height: 1.8; margin-top: 0.5rem;'>
+                <li><strong>Momentum Analysis</strong> - Rate of change dynamics</li>
+                <li><strong>Microstructure</strong> - Price efficiency metrics</li>
+                <li><strong>Flow Detection</strong> - Volume-weighted movements</li>
+            </ul>
+        </div>
+        """, unsafe_allow_html=True)
+    
+    with col_m2:
+        st.markdown("""
+        <div class='signal-card sell' style='padding: 1.5rem;'>
+            <h4 style='color: var(--danger-red); margin-bottom: 1rem;'>MMR - Macro Market Regression</h4>
+            <p style='color: var(--text-muted); font-size: 0.85rem; line-height: 1.7;'>
+                External macro correlation analysis with:
+            </p>
+            <ul style='color: var(--text-secondary); font-size: 0.85rem; line-height: 1.8; margin-top: 0.5rem;'>
+                <li><strong>Bond Markets</strong> - US/IN 10Y yields</li>
+                <li><strong>Currencies</strong> - DXY, USD/INR, EUR/INR</li>
+                <li><strong>Commodities</strong> - Gold, Crude, Brent</li>
+            </ul>
+        </div>
+        """, unsafe_allow_html=True)
+    
+    st.markdown("<br>", unsafe_allow_html=True)
+    
+    # Signal interpretation
+    st.markdown("### 🎯 Signal Interpretation")
+    
+    col_s1, col_s2, col_s3 = st.columns(3)
+    
+    with col_s1:
+        st.markdown("""
+        <div style='background: rgba(16, 185, 129, 0.1); border: 1px solid var(--success-green); border-radius: 12px; padding: 1.25rem;'>
+            <h4 style='color: var(--success-green); margin-bottom: 0.75rem;'>🟢 Oversold Zone</h4>
+            <p style='color: var(--text-muted); font-size: 0.85rem;'>Signal &lt; -5</p>
+            <p style='color: var(--text-secondary); font-size: 0.85rem; margin-top: 0.5rem;'>
+                Potential buying opportunity. Look for confirmation with divergences and macro support.
+            </p>
+        </div>
+        """, unsafe_allow_html=True)
+    
+    with col_s2:
+        st.markdown("""
+        <div style='background: rgba(136, 136, 136, 0.1); border: 1px solid var(--neutral); border-radius: 12px; padding: 1.25rem;'>
+            <h4 style='color: var(--neutral); margin-bottom: 0.75rem;'>⚪ Neutral Zone</h4>
+            <p style='color: var(--text-muted); font-size: 0.85rem;'>Signal -5 to +5</p>
+            <p style='color: var(--text-secondary); font-size: 0.85rem; margin-top: 0.5rem;'>
+                No clear directional bias. Wait for breakout or use other confluence factors.
+            </p>
+        </div>
+        """, unsafe_allow_html=True)
+    
+    with col_s3:
+        st.markdown("""
+        <div style='background: rgba(239, 68, 68, 0.1); border: 1px solid var(--danger-red); border-radius: 12px; padding: 1.25rem;'>
+            <h4 style='color: var(--danger-red); margin-bottom: 0.75rem;'>🔴 Overbought Zone</h4>
+            <p style='color: var(--text-muted); font-size: 0.85rem;'>Signal &gt; +5</p>
+            <p style='color: var(--text-secondary); font-size: 0.85rem; margin-top: 0.5rem;'>
+                Potential selling opportunity. Watch for bearish divergences and macro headwinds.
+            </p>
+        </div>
+        """, unsafe_allow_html=True)
+    
+    st.markdown("<br>", unsafe_allow_html=True)
+    
+    # Quick stats
+    st.markdown("### 📊 System Coverage")
+    
+    c1, c2, c3, c4 = st.columns(4)
+    with c1:
+        st.markdown(f'<div class="metric-card neutral"><h4>ETF Universe</h4><h2>{len(SCREENER_SYMBOLS)}</h2><div class="sub-metric">Curated ETFs</div></div>', unsafe_allow_html=True)
+    with c2:
+        st.markdown(f'<div class="metric-card neutral"><h4>Index Options</h4><h2>{len(INDEX_LIST)}</h2><div class="sub-metric">NSE Indices</div></div>', unsafe_allow_html=True)
+    with c3:
+        st.markdown(f'<div class="metric-card neutral"><h4>Macro Factors</h4><h2>{len(MACRO_SYMBOLS)}</h2><div class="sub-metric">Correlation Drivers</div></div>', unsafe_allow_html=True)
+    with c4:
+        st.markdown(f'<div class="metric-card neutral"><h4>Analysis Modes</h4><h2>3</h2><div class="sub-metric">Screener Types</div></div>', unsafe_allow_html=True)
+    
+    st.markdown("<br>", unsafe_allow_html=True)
+    
+    # Getting started
+    st.markdown("""
+    <div class='info-box'>
+        <h4>🚀 Getting Started</h4>
+        <p style='color: var(--text-muted); line-height: 1.7;'>
+            Select an analysis mode from the sidebar to begin. Each mode offers both <strong>Single Day</strong> analysis 
+            for current signals and <strong>Time Series</strong> analysis for tracking signal evolution over time.
+            Adjust indicator parameters in the sidebar's <em>Indicator Settings</em> expander for fine-tuning.
+        </p>
+    </div>
+    """, unsafe_allow_html=True)
+
+
 def main():
     mode, length, roc_len, regime_sensitivity, base_weight, spread_universe, spread_index, spread_date, spread_mode, spread_start_date, spread_end_date, etf_mode, etf_date, etf_start_date, etf_end_date = render_sidebar()
     render_header()
-    if "Chart" in mode:
-        run_chart_mode(length, roc_len, regime_sensitivity, base_weight)
+    
+    if "Home" in mode:
+        run_home_page()
     elif "ETF" in mode:
         # ETF Screener (fixed ETF universe)
         if etf_mode and "Time Series" in etf_mode:
             run_etf_timeseries_mode(length, roc_len, regime_sensitivity, base_weight, etf_start_date, etf_end_date)
         else:
             run_etf_screener_mode(length, roc_len, regime_sensitivity, base_weight, etf_date)
-    else:
+    elif "Market" in mode:
         # Market Screener (F&O / Index universe)
         if spread_mode and "Time Series" in spread_mode:
             run_market_timeseries_mode(length, roc_len, spread_universe, spread_index, spread_start_date, spread_end_date)
         else:
             run_market_screener_mode(length, roc_len, spread_universe, spread_index, spread_date)
+    elif "Chart" in mode:
+        run_chart_mode(length, roc_len, regime_sensitivity, base_weight)
+    
     st.markdown('<div class="section-divider"></div>', unsafe_allow_html=True)
     st.caption(f"© {datetime.datetime.now().year} UMA PRO | Hemrek Capital | {VERSION}")
 

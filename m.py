@@ -738,8 +738,8 @@ def create_price_chart(df, symbol):
     ma50 = df['Close'].rolling(50).mean()
     fig.add_trace(go.Scatter(x=df.index, y=ma50, mode='lines', name='MA50', line=dict(color='#06b6d4', width=1.5), opacity=0.8))
     fig.update_layout(
-        template='plotly_dark', paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='#1A1A1A', height=400,
-        margin=dict(l=0, r=0, t=30, b=0),
+        template='plotly_dark', paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='#1A1A1A', height=380,
+        margin=dict(l=10, r=10, t=30, b=50),
         xaxis=dict(showgrid=True, gridcolor='rgba(42,42,42,0.5)', rangeslider=dict(visible=False)),
         yaxis=dict(showgrid=True, gridcolor='rgba(42,42,42,0.5)', side='right'),
         legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1, bgcolor='rgba(0,0,0,0)', font=dict(size=10, color='#888888')),
@@ -772,8 +772,8 @@ def create_oscillator_chart(df):
     fig.add_hrect(y0=-10, y1=-5, fillcolor='rgba(16,185,129,0.08)', line_width=0)
     
     fig.update_layout(
-        template='plotly_dark', paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='#1A1A1A', height=350,
-        margin=dict(l=0, r=0, t=10, b=0),
+        template='plotly_dark', paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='#1A1A1A', height=320,
+        margin=dict(l=10, r=10, t=10, b=50),
         xaxis=dict(showgrid=True, gridcolor='rgba(42,42,42,0.5)'),
         yaxis=dict(showgrid=True, gridcolor='rgba(42,42,42,0.5)', range=[-12, 12], tickvals=[-10, -5, 0, 5, 10], side='right'),
         legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1, bgcolor='rgba(0,0,0,0)', font=dict(size=10, color='#888888')),
@@ -932,7 +932,7 @@ def create_ranking_chart(results_df, top_n=10):
 def render_header():
     st.markdown("""
     <div class="premium-header">
-        <h1>UMA : Unified Market Analysis</h1>
+        <h1>UMA PRO : Unified Market Analysis</h1>
         <div class="tagline">Quantitative Signal Intelligence System</div>
     </div>
     """, unsafe_allow_html=True)
@@ -1101,7 +1101,7 @@ def run_home_page():
         <div class='metric-card success' style='min-height: 280px;'>
             <h3 style='color: var(--success-green); margin-bottom: 1rem;'>📊 Market Screener</h3>
             <p style='color: var(--text-muted); font-size: 0.9rem; line-height: 1.6;'>
-                MSF-based signal analysis across F&O stocks or index constituents. Scan 200-500 stocks efficiently. MMR not utilizcd for performance.
+                MSF-based signal analysis across F&O stocks or index constituents. Scan 200-500 stocks efficiently.
             </p>
             <br>
             <p style='color: var(--text-secondary); font-size: 0.85rem;'>
@@ -2180,7 +2180,7 @@ def run_market_timeseries_mode(length, roc_len, spread_universe, spread_index, s
             
             fig_zones.update_layout(
                 template='plotly_dark', paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='#1A1A1A', height=400,
-                margin=dict(l=0, r=0, t=30, b=0),
+                margin=dict(l=10, r=10, t=30, b=50),
                 xaxis=dict(showgrid=True, gridcolor='rgba(42,42,42,0.5)'),
                 yaxis=dict(showgrid=True, gridcolor='rgba(42,42,42,0.5)', title='% of Stocks', range=[0, max(ts_df['Oversold_Pct'].max(), ts_df['Overbought_Pct'].max()) * 1.1]),
                 legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1, bgcolor='rgba(0,0,0,0)'),
@@ -2208,7 +2208,7 @@ def run_market_timeseries_mode(length, roc_len, spread_universe, spread_index, s
             
             fig_counts.update_layout(
                 template='plotly_dark', paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='#1A1A1A', height=350,
-                margin=dict(l=0, r=0, t=10, b=0), barmode='group',
+                margin=dict(l=10, r=10, t=10, b=50), barmode='group',
                 xaxis=dict(showgrid=True, gridcolor='rgba(42,42,42,0.5)'),
                 yaxis=dict(showgrid=True, gridcolor='rgba(42,42,42,0.5)', title='Stock Count'),
                 legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1, bgcolor='rgba(0,0,0,0)'),
@@ -2238,7 +2238,7 @@ def run_market_timeseries_mode(length, roc_len, spread_universe, spread_index, s
             
             fig_signals.update_layout(
                 template='plotly_dark', paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='#1A1A1A', height=400,
-                margin=dict(l=0, r=0, t=30, b=0),
+                margin=dict(l=10, r=10, t=30, b=50),
                 xaxis=dict(showgrid=True, gridcolor='rgba(42,42,42,0.5)'),
                 yaxis=dict(showgrid=True, gridcolor='rgba(42,42,42,0.5)', title='Signal Count'),
                 legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1, bgcolor='rgba(0,0,0,0)'),
@@ -2265,7 +2265,7 @@ def run_market_timeseries_mode(length, roc_len, spread_universe, spread_index, s
             
             fig_div.update_layout(
                 template='plotly_dark', paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='#1A1A1A', height=300,
-                margin=dict(l=0, r=0, t=10, b=0), barmode='relative',
+                margin=dict(l=10, r=10, t=10, b=50), barmode='relative',
                 xaxis=dict(showgrid=True, gridcolor='rgba(42,42,42,0.5)'),
                 yaxis=dict(showgrid=True, gridcolor='rgba(42,42,42,0.5)', title='Divergence Count'),
                 legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1, bgcolor='rgba(0,0,0,0)'),
@@ -2308,7 +2308,7 @@ def run_market_timeseries_mode(length, roc_len, spread_universe, spread_index, s
             
             fig_avg.update_layout(
                 template='plotly_dark', paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='#1A1A1A', height=400,
-                margin=dict(l=0, r=0, t=30, b=0),
+                margin=dict(l=10, r=10, t=30, b=50),
                 xaxis=dict(showgrid=True, gridcolor='rgba(42,42,42,0.5)'),
                 yaxis=dict(showgrid=True, gridcolor='rgba(42,42,42,0.5)', title='Average Signal', range=[-8, 8]),
                 legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1, bgcolor='rgba(0,0,0,0)'),
@@ -2583,7 +2583,7 @@ def run_etf_timeseries_mode(length, roc_len, regime_sensitivity, base_weight, st
             
             fig_zones.update_layout(
                 template='plotly_dark', paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='#1A1A1A', height=400,
-                margin=dict(l=0, r=0, t=30, b=0),
+                margin=dict(l=10, r=10, t=30, b=50),
                 xaxis=dict(showgrid=True, gridcolor='rgba(42,42,42,0.5)'),
                 yaxis=dict(showgrid=True, gridcolor='rgba(42,42,42,0.5)', title='% of ETFs', range=[0, max(ts_df['Oversold_Pct'].max(), ts_df['Overbought_Pct'].max()) * 1.1]),
                 legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1, bgcolor='rgba(0,0,0,0)'),
@@ -2610,7 +2610,7 @@ def run_etf_timeseries_mode(length, roc_len, regime_sensitivity, base_weight, st
             
             fig_counts.update_layout(
                 template='plotly_dark', paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='#1A1A1A', height=350,
-                margin=dict(l=0, r=0, t=10, b=0), barmode='group',
+                margin=dict(l=10, r=10, t=10, b=50), barmode='group',
                 xaxis=dict(showgrid=True, gridcolor='rgba(42,42,42,0.5)'),
                 yaxis=dict(showgrid=True, gridcolor='rgba(42,42,42,0.5)', title='ETF Count'),
                 legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1, bgcolor='rgba(0,0,0,0)'),
@@ -2640,7 +2640,7 @@ def run_etf_timeseries_mode(length, roc_len, regime_sensitivity, base_weight, st
             
             fig_signals.update_layout(
                 template='plotly_dark', paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='#1A1A1A', height=400,
-                margin=dict(l=0, r=0, t=30, b=0),
+                margin=dict(l=10, r=10, t=30, b=50),
                 xaxis=dict(showgrid=True, gridcolor='rgba(42,42,42,0.5)'),
                 yaxis=dict(showgrid=True, gridcolor='rgba(42,42,42,0.5)', title='Signal Count'),
                 legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1, bgcolor='rgba(0,0,0,0)'),
@@ -2667,7 +2667,7 @@ def run_etf_timeseries_mode(length, roc_len, regime_sensitivity, base_weight, st
             
             fig_div.update_layout(
                 template='plotly_dark', paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='#1A1A1A', height=300,
-                margin=dict(l=0, r=0, t=10, b=0), barmode='relative',
+                margin=dict(l=10, r=10, t=10, b=50), barmode='relative',
                 xaxis=dict(showgrid=True, gridcolor='rgba(42,42,42,0.5)'),
                 yaxis=dict(showgrid=True, gridcolor='rgba(42,42,42,0.5)', title='Divergence Count'),
                 legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1, bgcolor='rgba(0,0,0,0)'),
@@ -2709,7 +2709,7 @@ def run_etf_timeseries_mode(length, roc_len, regime_sensitivity, base_weight, st
             
             fig_avg.update_layout(
                 template='plotly_dark', paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='#1A1A1A', height=400,
-                margin=dict(l=0, r=0, t=30, b=0),
+                margin=dict(l=10, r=10, t=30, b=50),
                 xaxis=dict(showgrid=True, gridcolor='rgba(42,42,42,0.5)'),
                 yaxis=dict(showgrid=True, gridcolor='rgba(42,42,42,0.5)', title='Average Signal', range=[-8, 8]),
                 legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1, bgcolor='rgba(0,0,0,0)'),

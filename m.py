@@ -1096,7 +1096,7 @@ def run_chart_mode(length, roc_len, regime_sensitivity, base_weight):
     with col1:
         target_symbol = st.text_input("Symbol", value="SPY", placeholder="Enter ticker (e.g., SPY, AAPL, NIFTYIETF.NS)", label_visibility="collapsed")
     with col2:
-        analyze_btn = st.button("◈ ANALYZE", type="primary", use_container_width=True)
+        analyze_btn = st.button("◈ ANALYZE", type="primary", width="stretch")
     
     if analyze_btn and target_symbol:
         with st.spinner(""):
@@ -1144,14 +1144,14 @@ def run_chart_mode(length, roc_len, regime_sensitivity, base_weight):
                     tab1, tab2 = st.tabs(["**Price & Oscillator**", "**Signal Components**"])
                     
                     with tab1:
-                        st.plotly_chart(create_price_chart(display_df, target_symbol), use_container_width=True, config={'displayModeBar': False})
-                        st.plotly_chart(create_oscillator_chart(display_df), use_container_width=True, config={'displayModeBar': False})
+                        st.plotly_chart(create_price_chart(display_df, target_symbol), width="stretch", config={'displayModeBar': False})
+                        st.plotly_chart(create_oscillator_chart(display_df), width="stretch", config={'displayModeBar': False})
                     
                     with tab2:
                         c1, c2 = st.columns(2)
                         with c1:
                             st.markdown("##### Signal Gauge")
-                            st.plotly_chart(create_gauge_chart(curr_unified), use_container_width=True, config={'displayModeBar': False})
+                            st.plotly_chart(create_gauge_chart(curr_unified), width="stretch", config={'displayModeBar': False})
                         with c2:
                             st.markdown("##### Top Macro Drivers")
                             if drivers:
@@ -1358,23 +1358,23 @@ def run_etf_screener_mode(length, roc_len, regime_sensitivity, base_weight, anal
                 st.markdown("##### 🏆 Top Oversold ETFs")
                 top_oversold = results_df.nsmallest(15, 'Signal')
                 cols_o = ['DisplayName', 'Price', 'Change', 'Signal', 'MSF', 'MMR', 'Zone', 'Trigger']
-                st.dataframe(top_oversold[cols_o].rename(columns={'DisplayName': 'ETF', 'Change': 'Chg %'}), use_container_width=True, hide_index=True)
+                st.dataframe(top_oversold[cols_o].rename(columns={'DisplayName': 'ETF', 'Change': 'Chg %'}), width="stretch", hide_index=True)
                 
                 st.markdown("<br>", unsafe_allow_html=True)
                 st.markdown("##### 🔻 Top Overbought ETFs")
                 top_overbought = results_df.nlargest(15, 'Signal')
-                st.dataframe(top_overbought[cols_o].rename(columns={'DisplayName': 'ETF', 'Change': 'Chg %'}), use_container_width=True, hide_index=True)
+                st.dataframe(top_overbought[cols_o].rename(columns={'DisplayName': 'ETF', 'Change': 'Chg %'}), width="stretch", hide_index=True)
                 
                 st.markdown("<br>", unsafe_allow_html=True)
                 st.markdown("##### 📊 Signal Ranking Chart")
-                st.plotly_chart(create_ranking_chart(results_df, 15), use_container_width=True, config={'displayModeBar': False})
+                st.plotly_chart(create_ranking_chart(results_df, 15), width="stretch", config={'displayModeBar': False})
             
             with tab3:
                 col_d1, col_d2 = st.columns(2)
                 
                 with col_d1:
                     st.markdown("##### Signal Distribution")
-                    st.plotly_chart(create_distribution_chart(results_df), use_container_width=True, config={'displayModeBar': False})
+                    st.plotly_chart(create_distribution_chart(results_df), width="stretch", config={'displayModeBar': False})
                     
                     st.markdown("##### Zone Breakdown")
                     zone_data = {
@@ -1382,7 +1382,7 @@ def run_etf_screener_mode(length, roc_len, regime_sensitivity, base_weight, anal
                         "Count": [n_oversold, n_neutral, n_overbought],
                         "Percentage": [f"{n_oversold/len(results_df)*100:.1f}%", f"{n_neutral/len(results_df)*100:.1f}%", f"{n_overbought/len(results_df)*100:.1f}%"]
                     }
-                    st.dataframe(pd.DataFrame(zone_data), use_container_width=True, hide_index=True)
+                    st.dataframe(pd.DataFrame(zone_data), width="stretch", hide_index=True)
                 
                 with col_d2:
                     st.markdown("##### Statistical Summary")
@@ -1398,17 +1398,17 @@ def run_etf_screener_mode(length, roc_len, regime_sensitivity, base_weight, anal
                             f"{n_buys}:{n_sells}" if n_sells > 0 else f"{n_buys}:0"
                         ]
                     }
-                    st.dataframe(pd.DataFrame(stats_data), use_container_width=True, hide_index=True)
+                    st.dataframe(pd.DataFrame(stats_data), width="stretch", hide_index=True)
                     
                     st.markdown("##### Top Gainers Today")
                     top_gainers = results_df.nlargest(10, 'Change')[['DisplayName', 'Price', 'Change', 'Signal']]
                     top_gainers.columns = ['ETF', 'Price', 'Chg %', 'Signal']
-                    st.dataframe(top_gainers, use_container_width=True, hide_index=True)
+                    st.dataframe(top_gainers, width="stretch", hide_index=True)
                     
                     st.markdown("##### Top Losers Today")
                     top_losers = results_df.nsmallest(10, 'Change')[['DisplayName', 'Price', 'Change', 'Signal']]
                     top_losers.columns = ['ETF', 'Price', 'Chg %', 'Signal']
-                    st.dataframe(top_losers, use_container_width=True, hide_index=True)
+                    st.dataframe(top_losers, width="stretch", hide_index=True)
             
             with tab4:
                 st.markdown(f"##### Complete ETF Scan Results ({len(results_df)} ETFs) - {analysis_date_str}")
@@ -1432,7 +1432,7 @@ def run_etf_screener_mode(length, roc_len, regime_sensitivity, base_weight, anal
                 display_df = filtered_df[display_cols].copy()
                 display_df.columns = ['ETF', 'Price', 'Chg %', 'Signal', 'MSF', 'MMR', 'Zone', 'Trigger', 'Divergence']
                 
-                st.dataframe(display_df, use_container_width=True, hide_index=True, height=400)
+                st.dataframe(display_df, width="stretch", hide_index=True, height=400)
                 
                 st.markdown("<br>", unsafe_allow_html=True)
                 csv_data = results_df.to_csv(index=False).encode('utf-8')
@@ -1678,23 +1678,23 @@ def run_market_screener_mode(length, roc_len, spread_universe, spread_index, spr
                 st.markdown("##### 🏆 Top 20 Most Oversold")
                 top_oversold = results_df.nsmallest(20, 'Signal')
                 cols_o = ['DisplayName', 'Price', 'Change', 'Signal', 'Zone', 'Trigger']
-                st.dataframe(top_oversold[cols_o].rename(columns={'DisplayName': 'Symbol', 'Change': 'Chg %'}), use_container_width=True, hide_index=True)
+                st.dataframe(top_oversold[cols_o].rename(columns={'DisplayName': 'Symbol', 'Change': 'Chg %'}), width="stretch", hide_index=True)
                 
                 st.markdown("<br>", unsafe_allow_html=True)
                 st.markdown("##### 🔻 Top 20 Most Overbought")
                 top_overbought = results_df.nlargest(20, 'Signal')
-                st.dataframe(top_overbought[cols_o].rename(columns={'DisplayName': 'Symbol', 'Change': 'Chg %'}), use_container_width=True, hide_index=True)
+                st.dataframe(top_overbought[cols_o].rename(columns={'DisplayName': 'Symbol', 'Change': 'Chg %'}), width="stretch", hide_index=True)
                 
                 st.markdown("<br>", unsafe_allow_html=True)
                 st.markdown("##### 📊 Extreme Signals Chart")
-                st.plotly_chart(create_ranking_chart(results_df, 20), use_container_width=True, config={'displayModeBar': False})
+                st.plotly_chart(create_ranking_chart(results_df, 20), width="stretch", config={'displayModeBar': False})
             
             with tab3:
                 col_d1, col_d2 = st.columns(2)
                 
                 with col_d1:
                     st.markdown("##### Signal Distribution")
-                    st.plotly_chart(create_distribution_chart(results_df), use_container_width=True, config={'displayModeBar': False})
+                    st.plotly_chart(create_distribution_chart(results_df), width="stretch", config={'displayModeBar': False})
                     
                     st.markdown("##### Zone Breakdown")
                     zone_data = {
@@ -1702,7 +1702,7 @@ def run_market_screener_mode(length, roc_len, spread_universe, spread_index, spr
                         "Count": [n_oversold, n_neutral, n_overbought],
                         "Percentage": [f"{n_oversold/len(results_df)*100:.1f}%", f"{n_neutral/len(results_df)*100:.1f}%", f"{n_overbought/len(results_df)*100:.1f}%"]
                     }
-                    st.dataframe(pd.DataFrame(zone_data), use_container_width=True, hide_index=True)
+                    st.dataframe(pd.DataFrame(zone_data), width="stretch", hide_index=True)
                 
                 with col_d2:
                     st.markdown("##### Statistical Summary")
@@ -1718,17 +1718,17 @@ def run_market_screener_mode(length, roc_len, spread_universe, spread_index, spr
                             f"{n_buys}:{n_sells}" if n_sells > 0 else f"{n_buys}:0"
                         ]
                     }
-                    st.dataframe(pd.DataFrame(stats_data), use_container_width=True, hide_index=True)
+                    st.dataframe(pd.DataFrame(stats_data), width="stretch", hide_index=True)
                     
                     st.markdown("##### Top Gainers Today")
                     top_gainers = results_df.nlargest(10, 'Change')[['DisplayName', 'Price', 'Change', 'Signal']]
                     top_gainers.columns = ['Symbol', 'Price', 'Chg %', 'Signal']
-                    st.dataframe(top_gainers, use_container_width=True, hide_index=True)
+                    st.dataframe(top_gainers, width="stretch", hide_index=True)
                     
                     st.markdown("##### Top Losers Today")
                     top_losers = results_df.nsmallest(10, 'Change')[['DisplayName', 'Price', 'Change', 'Signal']]
                     top_losers.columns = ['Symbol', 'Price', 'Chg %', 'Signal']
-                    st.dataframe(top_losers, use_container_width=True, hide_index=True)
+                    st.dataframe(top_losers, width="stretch", hide_index=True)
             
             with tab4:
                 st.markdown(f"##### Complete Market Scan Results ({len(results_df)} stocks) - {analysis_date_str}")
@@ -1752,7 +1752,7 @@ def run_market_screener_mode(length, roc_len, spread_universe, spread_index, spr
                 display_df = filtered_df[display_cols].copy()
                 display_df.columns = ['Symbol', 'Price', 'Chg %', 'Signal', 'MSF', 'Zone', 'Trigger', 'Divergence']
                 
-                st.dataframe(display_df, use_container_width=True, hide_index=True, height=500)
+                st.dataframe(display_df, width="stretch", hide_index=True, height=500)
                 
                 st.markdown("<br>", unsafe_allow_html=True)
                 csv_data = results_df.to_csv(index=False).encode('utf-8')
@@ -2013,7 +2013,7 @@ def run_market_timeseries_mode(length, roc_len, spread_universe, spread_index, s
                 legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1, bgcolor='rgba(0,0,0,0)'),
                 font=dict(family='Inter', color='#EAEAEA'), hovermode='x unified'
             )
-            st.plotly_chart(fig_zones, use_container_width=True, config={'displayModeBar': False})
+            st.plotly_chart(fig_zones, width="stretch", config={'displayModeBar': False})
             
             st.markdown("<br>", unsafe_allow_html=True)
             st.markdown("##### Raw Counts Over Time")
@@ -2042,7 +2042,7 @@ def run_market_timeseries_mode(length, roc_len, spread_universe, spread_index, s
                 font=dict(family='Inter', color='#EAEAEA'), hovermode='x unified',
                 colorway=['#10b981', '#ef4444']  # Ensure colors are applied
             )
-            st.plotly_chart(fig_counts, use_container_width=True, config={'displayModeBar': False})
+            st.plotly_chart(fig_counts, width="stretch", config={'displayModeBar': False})
         
         with tab2:
             st.markdown("##### Buy / Sell Signal Counts Over Time")
@@ -2071,7 +2071,7 @@ def run_market_timeseries_mode(length, roc_len, spread_universe, spread_index, s
                 legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1, bgcolor='rgba(0,0,0,0)'),
                 font=dict(family='Inter', color='#EAEAEA'), hovermode='x unified'
             )
-            st.plotly_chart(fig_signals, use_container_width=True, config={'displayModeBar': False})
+            st.plotly_chart(fig_signals, width="stretch", config={'displayModeBar': False})
             
             st.markdown("<br>", unsafe_allow_html=True)
             st.markdown("##### Divergence Signals Over Time")
@@ -2099,7 +2099,7 @@ def run_market_timeseries_mode(length, roc_len, spread_universe, spread_index, s
                 font=dict(family='Inter', color='#EAEAEA'), hovermode='x unified',
                 colorway=['#FFC300', '#06b6d4']
             )
-            st.plotly_chart(fig_div, use_container_width=True, config={'displayModeBar': False})
+            st.plotly_chart(fig_div, width="stretch", config={'displayModeBar': False})
         
         with tab3:
             st.markdown("##### Average Signal Value Over Time")
@@ -2141,7 +2141,7 @@ def run_market_timeseries_mode(length, roc_len, spread_universe, spread_index, s
                 legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1, bgcolor='rgba(0,0,0,0)'),
                 font=dict(family='Inter', color='#EAEAEA'), hovermode='x unified'
             )
-            st.plotly_chart(fig_avg, use_container_width=True, config={'displayModeBar': False})
+            st.plotly_chart(fig_avg, width="stretch", config={'displayModeBar': False})
             
             st.markdown("<br>", unsafe_allow_html=True)
             col_r1, col_r2 = st.columns(2)
@@ -2157,7 +2157,7 @@ def run_market_timeseries_mode(length, roc_len, spread_universe, spread_index, s
                     "Days": [bullish_days, neutral_days, bearish_days],
                     "Percentage": [f"{bullish_days/len(ts_df)*100:.1f}%", f"{neutral_days/len(ts_df)*100:.1f}%", f"{bearish_days/len(ts_df)*100:.1f}%"]
                 }
-                st.dataframe(pd.DataFrame(regime_stats), use_container_width=True, hide_index=True)
+                st.dataframe(pd.DataFrame(regime_stats), width="stretch", hide_index=True)
             
             with col_r2:
                 st.markdown("##### Signal Statistics")
@@ -2171,7 +2171,7 @@ def run_market_timeseries_mode(length, roc_len, spread_universe, spread_index, s
                         f"{ts_df['Avg_Signal'].std():.2f}"
                     ]
                 }
-                st.dataframe(pd.DataFrame(signal_stats), use_container_width=True, hide_index=True)
+                st.dataframe(pd.DataFrame(signal_stats), width="stretch", hide_index=True)
         
         with tab4:
             st.markdown(f"##### Daily Time Series Data ({len(ts_df)} trading days)")
@@ -2183,7 +2183,7 @@ def run_market_timeseries_mode(length, roc_len, spread_universe, spread_index, s
             display_ts.columns = ['Date', 'Stocks', 'Oversold', 'Neutral', 'Overbought', 
                                  'Buy Sig', 'Sell Sig', 'Avg Signal', 'Bull Div', 'Bear Div']
             
-            st.dataframe(display_ts, use_container_width=True, hide_index=True, height=500)
+            st.dataframe(display_ts, width="stretch", hide_index=True, height=500)
             
             st.markdown("<br>", unsafe_allow_html=True)
             csv_data = ts_df.to_csv(index=False).encode('utf-8')
@@ -2416,7 +2416,7 @@ def run_etf_timeseries_mode(length, roc_len, regime_sensitivity, base_weight, st
                 legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1, bgcolor='rgba(0,0,0,0)'),
                 font=dict(family='Inter', color='#EAEAEA'), hovermode='x unified'
             )
-            st.plotly_chart(fig_zones, use_container_width=True, config={'displayModeBar': False})
+            st.plotly_chart(fig_zones, width="stretch", config={'displayModeBar': False})
             
             st.markdown("<br>", unsafe_allow_html=True)
             st.markdown("##### Raw Counts Over Time")
@@ -2444,7 +2444,7 @@ def run_etf_timeseries_mode(length, roc_len, regime_sensitivity, base_weight, st
                 font=dict(family='Inter', color='#EAEAEA'), hovermode='x unified',
                 colorway=['#10b981', '#ef4444']
             )
-            st.plotly_chart(fig_counts, use_container_width=True, config={'displayModeBar': False})
+            st.plotly_chart(fig_counts, width="stretch", config={'displayModeBar': False})
         
         with tab2:
             st.markdown("##### Buy / Sell Signal Counts Over Time")
@@ -2473,7 +2473,7 @@ def run_etf_timeseries_mode(length, roc_len, regime_sensitivity, base_weight, st
                 legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1, bgcolor='rgba(0,0,0,0)'),
                 font=dict(family='Inter', color='#EAEAEA'), hovermode='x unified'
             )
-            st.plotly_chart(fig_signals, use_container_width=True, config={'displayModeBar': False})
+            st.plotly_chart(fig_signals, width="stretch", config={'displayModeBar': False})
             
             st.markdown("<br>", unsafe_allow_html=True)
             st.markdown("##### Divergence Signals Over Time")
@@ -2501,7 +2501,7 @@ def run_etf_timeseries_mode(length, roc_len, regime_sensitivity, base_weight, st
                 font=dict(family='Inter', color='#EAEAEA'), hovermode='x unified',
                 colorway=['#FFC300', '#06b6d4']
             )
-            st.plotly_chart(fig_div, use_container_width=True, config={'displayModeBar': False})
+            st.plotly_chart(fig_div, width="stretch", config={'displayModeBar': False})
         
         with tab3:
             st.markdown("##### Average Signal Value Over Time")
@@ -2542,7 +2542,7 @@ def run_etf_timeseries_mode(length, roc_len, regime_sensitivity, base_weight, st
                 legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1, bgcolor='rgba(0,0,0,0)'),
                 font=dict(family='Inter', color='#EAEAEA'), hovermode='x unified'
             )
-            st.plotly_chart(fig_avg, use_container_width=True, config={'displayModeBar': False})
+            st.plotly_chart(fig_avg, width="stretch", config={'displayModeBar': False})
             
             st.markdown("<br>", unsafe_allow_html=True)
             col_r1, col_r2 = st.columns(2)
@@ -2558,7 +2558,7 @@ def run_etf_timeseries_mode(length, roc_len, regime_sensitivity, base_weight, st
                     "Days": [bullish_days, neutral_days, bearish_days],
                     "Percentage": [f"{bullish_days/len(ts_df)*100:.1f}%", f"{neutral_days/len(ts_df)*100:.1f}%", f"{bearish_days/len(ts_df)*100:.1f}%"]
                 }
-                st.dataframe(pd.DataFrame(regime_stats), use_container_width=True, hide_index=True)
+                st.dataframe(pd.DataFrame(regime_stats), width="stretch", hide_index=True)
             
             with col_r2:
                 st.markdown("##### Signal Statistics")
@@ -2572,7 +2572,7 @@ def run_etf_timeseries_mode(length, roc_len, regime_sensitivity, base_weight, st
                         f"{ts_df['Avg_Signal'].std():.2f}"
                     ]
                 }
-                st.dataframe(pd.DataFrame(signal_stats), use_container_width=True, hide_index=True)
+                st.dataframe(pd.DataFrame(signal_stats), width="stretch", hide_index=True)
         
         with tab4:
             st.markdown(f"##### Daily ETF Time Series Data ({len(ts_df)} trading days)")
@@ -2584,7 +2584,7 @@ def run_etf_timeseries_mode(length, roc_len, regime_sensitivity, base_weight, st
             display_ts.columns = ['Date', 'ETFs', 'Oversold', 'Neutral', 'Overbought', 
                                  'Buy Sig', 'Sell Sig', 'Avg Signal', 'Bull Div', 'Bear Div']
             
-            st.dataframe(display_ts, use_container_width=True, hide_index=True, height=500)
+            st.dataframe(display_ts, width="stretch", hide_index=True, height=500)
             
             st.markdown("<br>", unsafe_allow_html=True)
             csv_data = ts_df.to_csv(index=False).encode('utf-8')

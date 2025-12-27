@@ -1101,7 +1101,7 @@ def run_home_page():
         <div class='metric-card success' style='min-height: 280px;'>
             <h3 style='color: var(--success-green); margin-bottom: 1rem;'>📊 Market Screener</h3>
             <p style='color: var(--text-muted); font-size: 0.9rem; line-height: 1.6;'>
-                MSF-based signal analysis across F&O stocks or index constituents. Scan 200-500 stocks efficiently.
+                MSF-based signal analysis across F&O stocks or index constituents. Scan 200-500 stocks efficiently. MMR not utilizcd for performance.
             </p>
             <br>
             <p style='color: var(--text-secondary); font-size: 0.85rem;'>

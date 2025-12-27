@@ -1073,14 +1073,6 @@ def render_sidebar():
 def run_home_page():
     """Landing page with overview and quick navigation"""
     
-    # Welcome section
-    st.markdown("""
-    <div class='info-box' style='text-align: center; padding: 2rem;'>
-        <h2 style='color: var(--primary-color); margin-bottom: 0.5rem;'>Welcome to UMA PRO</h2>
-        <p style='color: var(--text-muted); font-size: 1rem;'>Unified Market Analysis - Quantitative Signal Intelligence System</p>
-    </div>
-    """, unsafe_allow_html=True)
-    
     st.markdown("<br>", unsafe_allow_html=True)
     
     # Feature cards

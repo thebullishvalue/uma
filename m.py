@@ -1,5 +1,5 @@
 """
-UMA PRO - Unified Market Analysis | A Pragyam Product Family Member
+UMA - Unified Market Analysis | A Pragyam Product Family Member
 Quantitative Signal Intelligence System
 """
 
@@ -25,8 +25,8 @@ urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 # ══════════════════════════════════════════════════════════════════════════════
 
 st.set_page_config(
-    page_title="UMA PRO | Unified Market Analysis",
-    page_icon="◈",
+    page_title="UMA | Unified Market Analysis",
+    # page_icon="◈",
     layout="wide",
     initial_sidebar_state="expanded"
 )
@@ -932,7 +932,7 @@ def create_ranking_chart(results_df, top_n=10):
 def render_header():
     st.markdown("""
     <div class="premium-header">
-        <h1>UMA PRO : Unified Market Analysis</h1>
+        <h1>UMA : Unified Market Analysis</h1>
         <div class="tagline">Quantitative Signal Intelligence System</div>
     </div>
     """, unsafe_allow_html=True)
@@ -1261,7 +1261,7 @@ def main():
         run_chart_mode(length, roc_len, regime_sensitivity, base_weight)
     
     st.markdown('<div class="section-divider"></div>', unsafe_allow_html=True)
-    st.caption(f"© {datetime.datetime.now().year} UMA PRO | Hemrek Capital | {VERSION}")
+    st.caption(f"© {datetime.datetime.now().year} UMA | Hemrek Capital | {VERSION}")
 
 
 def run_chart_mode(length, roc_len, regime_sensitivity, base_weight):

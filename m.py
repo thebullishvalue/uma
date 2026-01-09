@@ -942,7 +942,7 @@ def render_sidebar():
     with st.sidebar:
         st.markdown("""
         <div style="text-align: center; padding: 1rem 0; margin-bottom: 1rem;">
-            <div style="font-size: 1.75rem; font-weight: 800; color: #FFC300;">◈ UMA PRO</div>
+            <div style="font-size: 1.75rem; font-weight: 800; color: #FFC300;">UMA</div>
             <div style="color: #888888; font-size: 0.75rem; margin-top: 0.25rem;">Signal Intelligence</div>
         </div>
         """, unsafe_allow_html=True)

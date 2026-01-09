@@ -64,7 +64,7 @@ st.markdown("""
     .main, [data-testid="stSidebar"] { background-color: var(--background-color); color: var(--text-primary); }
     .stApp > header { background-color: transparent; }
     #MainMenu {visibility: hidden;} footer {visibility: hidden;}
-    .block-container { padding-top: 3.5rem; max-width: 1400px; }
+    .block-container { padding-top: 3.5rem; max-width: 90%; padding-left: 2rem; padding-right: 2rem; }
     
     /* Sidebar toggle button - always visible */
     [data-testid="collapsedControl"] {

@@ -2027,6 +2027,11 @@ def run_market_timeseries_mode(length, roc_len, spread_universe, spread_index, s
             status_text.empty()
             return
         
+        # Check if requested end date data is available
+        actual_last_date = trading_days[-1].date() if trading_days else None
+        if actual_last_date and actual_last_date < end_date:
+            st.warning(f"⚠️ Data for **{end_date.strftime('%d %b %Y')}** is not yet available. Analysis will run through **{actual_last_date.strftime('%d %b %Y')}** (latest available).")
+        
         st.toast(f"Found {len(trading_days)} trading days", icon="📅")
         
         # Process MSF for all stocks once
@@ -2126,7 +2131,10 @@ def run_market_timeseries_mode(length, roc_len, spread_universe, spread_index, s
         ts_df['Date'] = pd.to_datetime(ts_df['Date'])
         ts_df = ts_df.sort_values('Date')
         
-        st.success(f"✅ Time Series Analysis Complete! Analyzed {len(ts_df)} trading days")
+        # Show actual analyzed date range
+        actual_start = ts_df['Date'].min().strftime('%d %b %Y')
+        actual_end = ts_df['Date'].max().strftime('%d %b %Y')
+        st.success(f"✅ Time Series Analysis Complete! Analyzed {len(ts_df)} trading days ({actual_start} to {actual_end})")
         
         # Summary metrics
         st.markdown("<br>", unsafe_allow_html=True)
@@ -2360,10 +2368,12 @@ def run_market_timeseries_mode(length, roc_len, spread_universe, spread_index, s
             
             st.markdown("<br>", unsafe_allow_html=True)
             csv_data = ts_df.to_csv(index=False).encode('utf-8')
+            actual_start_str = ts_df['Date'].min().strftime('%Y%m%d')
+            actual_end_str = ts_df['Date'].max().strftime('%Y%m%d')
             st.download_button(
                 label="📥 Download Time Series Data (CSV)",
                 data=csv_data,
-                file_name=f"uma_market_timeseries_{universe_title.replace(' ', '_')}_{start_date.strftime('%Y%m%d')}_{end_date.strftime('%Y%m%d')}.csv",
+                file_name=f"uma_market_timeseries_{universe_title.replace(' ', '_')}_{actual_start_str}_{actual_end_str}.csv",
                 mime="text/csv"
             )
 
@@ -2454,6 +2464,11 @@ def run_etf_timeseries_mode(length, roc_len, regime_sensitivity, base_weight, st
             status_text.empty()
             return
         
+        # Check if requested end date data is available
+        actual_last_date = trading_days[-1].date() if trading_days else None
+        if actual_last_date and actual_last_date < end_date:
+            st.warning(f"⚠️ Data for **{end_date.strftime('%d %b %Y')}** is not yet available. Analysis will run through **{actual_last_date.strftime('%d %b %Y')}** (latest available).")
+        
         st.toast(f"Found {len(trading_days)} trading days", icon="📅")
         
         # Analyze each trading day
@@ -2530,7 +2545,10 @@ def run_etf_timeseries_mode(length, roc_len, regime_sensitivity, base_weight, st
         ts_df['Date'] = pd.to_datetime(ts_df['Date'])
         ts_df = ts_df.sort_values('Date')
         
-        st.success(f"✅ ETF Time Series Analysis Complete! Analyzed {len(ts_df)} trading days")
+        # Show actual analyzed date range
+        actual_start = ts_df['Date'].min().strftime('%d %b %Y')
+        actual_end = ts_df['Date'].max().strftime('%d %b %Y')
+        st.success(f"✅ ETF Time Series Analysis Complete! Analyzed {len(ts_df)} trading days ({actual_start} to {actual_end})")
         
         # Summary metrics
         st.markdown("<br>", unsafe_allow_html=True)
@@ -2761,10 +2779,12 @@ def run_etf_timeseries_mode(length, roc_len, regime_sensitivity, base_weight, st
             
             st.markdown("<br>", unsafe_allow_html=True)
             csv_data = ts_df.to_csv(index=False).encode('utf-8')
+            actual_start_str = ts_df['Date'].min().strftime('%Y%m%d')
+            actual_end_str = ts_df['Date'].max().strftime('%Y%m%d')
             st.download_button(
                 label="📥 Download ETF Time Series Data (CSV)",
                 data=csv_data,
-                file_name=f"uma_etf_timeseries_{start_date.strftime('%Y%m%d')}_{end_date.strftime('%Y%m%d')}.csv",
+                file_name=f"uma_etf_timeseries_{actual_start_str}_{actual_end_str}.csv",
                 mime="text/csv"
             )
 

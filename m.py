@@ -373,8 +373,8 @@ def get_index_stock_list(index):
 
 
 @st.cache_data(ttl=300, show_spinner=False)
-def fetch_batch_data(stock_list, end_date=None, days_back=100):
-    """Batch download for spread screener"""
+def fetch_batch_data(stock_list, end_date=None, days_back=100, include_live=True):
+    """Batch download for spread screener with optional live data for current day"""
     if end_date is None:
         end_date = datetime.date.today()
     
@@ -401,17 +401,67 @@ def fetch_batch_data(stock_list, end_date=None, days_back=100):
                 try:
                     ticker_df = all_data.xs(ticker, level=0, axis=1)
                     if not ticker_df.empty and not ticker_df['Close'].isnull().all():
-                        data_dict[ticker] = ticker_df
+                        data_dict[ticker] = ticker_df.copy()
                 except KeyError:
                     pass
-            return data_dict, f"✓ Downloaded {len(data_dict)} tickers"
 
         elif isinstance(all_data, dict):
-            valid_data = {t:df for t,df in all_data.items() if not df.empty and not df['Close'].isnull().all()}
-            return valid_data, f"✓ Downloaded {len(valid_data)} tickers"
+            data_dict = {t:df.copy() for t,df in all_data.items() if not df.empty and not df['Close'].isnull().all()}
 
         else:
              return None, "Unexpected data structure"
+        
+        # Fetch live data for today if requested and end_date is today
+        if include_live and end_date == datetime.date.today() and data_dict:
+            today_ts = pd.Timestamp(datetime.date.today())
+            
+            # Check if today's data is missing from at least one ticker
+            sample_df = list(data_dict.values())[0]
+            sample_df.index = pd.to_datetime(sample_df.index)
+            if sample_df.index.tz is not None:
+                sample_df.index = sample_df.index.tz_localize(None)
+            
+            has_today = any(idx.date() == datetime.date.today() for idx in sample_df.index)
+            
+            if not has_today:
+                # Fetch live data for all tickers
+                try:
+                    live_data = yf.download(
+                        list(data_dict.keys()),
+                        period="1d",
+                        progress=False,
+                        auto_adjust=True,
+                        group_by='ticker'
+                    )
+                    
+                    if not live_data.empty:
+                        if isinstance(live_data, pd.DataFrame) and isinstance(live_data.columns, pd.MultiIndex):
+                            for ticker in data_dict.keys():
+                                try:
+                                    live_ticker = live_data.xs(ticker, level=0, axis=1)
+                                    if not live_ticker.empty and not live_ticker['Close'].isnull().all():
+                                        # Append live data to historical
+                                        hist_df = data_dict[ticker]
+                                        hist_df.index = pd.to_datetime(hist_df.index)
+                                        if hist_df.index.tz is not None:
+                                            hist_df.index = hist_df.index.tz_localize(None)
+                                        
+                                        live_ticker.index = pd.to_datetime(live_ticker.index)
+                                        if live_ticker.index.tz is not None:
+                                            live_ticker.index = live_ticker.index.tz_localize(None)
+                                        
+                                        # Only append if not already present
+                                        new_dates = live_ticker.index.difference(hist_df.index)
+                                        if len(new_dates) > 0:
+                                            data_dict[ticker] = pd.concat([hist_df, live_ticker.loc[new_dates]]).sort_index()
+                                except KeyError:
+                                    pass
+                        
+                        return data_dict, f"✓ Downloaded {len(data_dict)} tickers (with live data)"
+                except Exception:
+                    pass  # Fall through to return historical data only
+            
+        return data_dict, f"✓ Downloaded {len(data_dict)} tickers"
 
     except Exception as e:
         return None, f"Download error: {e}"
@@ -440,7 +490,7 @@ def calculate_atr(df, length=14):
 # DATA FETCHING
 # ══════════════════════════════════════════════════════════════════════════════
 
-@st.cache_data(ttl=3600, show_spinner=False)
+@st.cache_data(ttl=900, show_spinner=False)  # Reduced TTL to 15 mins for fresher data
 def fetch_macro_data(days_back=100):
     end_date = datetime.date.today()
     start_date = end_date - datetime.timedelta(days=days_back + 365)
@@ -478,6 +528,25 @@ def fetch_macro_data(days_back=100):
             if yf_df.index.tz is not None:
                 yf_df.index = yf_df.index.tz_localize(None)
             yf_df = yf_df.sort_index()
+            
+            # Fetch live data for today if missing
+            has_today = any(idx.date() == datetime.date.today() for idx in yf_df.index)
+            if not has_today:
+                try:
+                    live_yf = yf.download(yf_tickers, period="1d", progress=False)
+                    if not live_yf.empty:
+                        if isinstance(live_yf.columns, pd.MultiIndex):
+                            if 'Close' in live_yf.columns.get_level_values(0):
+                                live_yf = live_yf['Close']
+                            elif 'Adj Close' in live_yf.columns.get_level_values(0):
+                                live_yf = live_yf['Adj Close']
+                        if live_yf.index.tz is not None:
+                            live_yf.index = live_yf.index.tz_localize(None)
+                        new_dates = live_yf.index.difference(yf_df.index)
+                        if len(new_dates) > 0:
+                            yf_df = pd.concat([yf_df, live_yf.loc[new_dates]]).sort_index()
+                except Exception:
+                    pass
     except Exception:
         pass
 
@@ -492,7 +561,7 @@ def fetch_macro_data(days_back=100):
     return combined_macro.ffill()
 
 
-def fetch_ticker_data(target_ticker, macro_df, days_back=100):
+def fetch_ticker_data(target_ticker, macro_df, days_back=100, include_live=True):
     end_date = datetime.date.today()
     start_date = end_date - datetime.timedelta(days=days_back + 365)
     try:
@@ -504,6 +573,26 @@ def fetch_ticker_data(target_ticker, macro_df, days_back=100):
         target_df = target_df[['Open', 'High', 'Low', 'Close', 'Volume']].sort_index()
         if target_df.index.tz is not None:
             target_df.index = target_df.index.tz_localize(None)
+        
+        # Fetch live data for today if requested
+        if include_live:
+            has_today = any(idx.date() == datetime.date.today() for idx in target_df.index)
+            if not has_today:
+                try:
+                    live_df = yf.download(target_ticker, period="1d", progress=False)
+                    if not live_df.empty:
+                        if isinstance(live_df.columns, pd.MultiIndex):
+                            live_df.columns = live_df.columns.get_level_values(0)
+                        live_df = live_df[['Open', 'High', 'Low', 'Close', 'Volume']]
+                        if live_df.index.tz is not None:
+                            live_df.index = live_df.index.tz_localize(None)
+                        # Append only new dates
+                        new_dates = live_df.index.difference(target_df.index)
+                        if len(new_dates) > 0:
+                            target_df = pd.concat([target_df, live_df.loc[new_dates]]).sort_index()
+                except Exception:
+                    pass
+        
         combined = target_df.join(macro_df, how='left').ffill()
         return combined
     except Exception:
@@ -2029,8 +2118,15 @@ def run_market_timeseries_mode(length, roc_len, spread_universe, spread_index, s
         
         # Check if requested end date data is available
         actual_last_date = trading_days[-1].date() if trading_days else None
-        if actual_last_date and actual_last_date < end_date:
-            st.warning(f"⚠️ Data for **{end_date.strftime('%d %b %Y')}** is not yet available. Analysis will run through **{actual_last_date.strftime('%d %b %Y')}** (latest available).")
+        is_today_included = actual_last_date == datetime.date.today() if actual_last_date else False
+        
+        if end_date == datetime.date.today():
+            if is_today_included:
+                st.info(f"🔴 **Live Data Included** - Analysis includes today's market data ({actual_last_date.strftime('%d %b %Y')})")
+            else:
+                st.warning(f"⚠️ Today's data not yet available (market may be closed or data delayed). Analysis runs through **{actual_last_date.strftime('%d %b %Y')}**.")
+        elif actual_last_date and actual_last_date < end_date:
+            st.warning(f"⚠️ Data for **{end_date.strftime('%d %b %Y')}** is not available. Analysis will run through **{actual_last_date.strftime('%d %b %Y')}** (latest available).")
         
         st.toast(f"Found {len(trading_days)} trading days", icon="📅")
         
@@ -2466,8 +2562,15 @@ def run_etf_timeseries_mode(length, roc_len, regime_sensitivity, base_weight, st
         
         # Check if requested end date data is available
         actual_last_date = trading_days[-1].date() if trading_days else None
-        if actual_last_date and actual_last_date < end_date:
-            st.warning(f"⚠️ Data for **{end_date.strftime('%d %b %Y')}** is not yet available. Analysis will run through **{actual_last_date.strftime('%d %b %Y')}** (latest available).")
+        is_today_included = actual_last_date == datetime.date.today() if actual_last_date else False
+        
+        if end_date == datetime.date.today():
+            if is_today_included:
+                st.info(f"🔴 **Live Data Included** - Analysis includes today's market data ({actual_last_date.strftime('%d %b %Y')})")
+            else:
+                st.warning(f"⚠️ Today's data not yet available (market may be closed or data delayed). Analysis runs through **{actual_last_date.strftime('%d %b %Y')}**.")
+        elif actual_last_date and actual_last_date < end_date:
+            st.warning(f"⚠️ Data for **{end_date.strftime('%d %b %Y')}** is not available. Analysis will run through **{actual_last_date.strftime('%d %b %Y')}** (latest available).")
         
         st.toast(f"Found {len(trading_days)} trading days", icon="📅")
         
